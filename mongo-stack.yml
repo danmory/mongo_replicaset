@@ -1,0 +1,40 @@
+version: "3"
+services:
+  mongo1:
+    depends_on:
+      - mongo2
+      - mongoarbiter
+    image: mongo:latest
+    command: mongod --replSet rs1 --noauth
+    volumes:
+      - mongo-data-1:/data/db
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.mongo.replica == 1
+  mongo2:
+    image: mongo:latest
+    command: mongod --replSet rs1 --noauth
+    volumes:
+      - mongo-data-2:/data/db
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.mongo.replica == 2
+  mongoarbiter:
+    image: mongo:latest
+    command: mongod --replSet rs1 --noauth
+    volumes:
+      - mongo-data-arbiter:/data/db
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.mongo.arbiter == 1
+
+volumes:
+  mongo-data-1:
+  mongo-data-2:
+  mongo-data-arbiter:
