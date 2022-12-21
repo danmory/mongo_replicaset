@@ -33,6 +33,10 @@ services:
       placement:
         constraints:
           - node.labels.mongo.arbiter == 1
+  app:
+    image: danmory/mongo_repl_app:latest
+    deploy:
+      replicas: 1
 
 volumes:
   mongo-data-1:
